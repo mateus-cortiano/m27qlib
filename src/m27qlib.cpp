@@ -5,14 +5,14 @@
 #include "libusbk/libusbk.h"
 #include "m27qlib/m27qlib.h"
 
+#define VID 0x2109
+#define PID 0x8883
+
 static UINT Delay{ 50 };
-
-static const uint16_t VID{ 0x2109 };
-static const uint16_t PID{ 0x8883 };
-
 static KUSB_DRIVER_API Usb;
 static KUSB_HANDLE usbHandle = NULL;
 static KLST_DEVINFO_HANDLE deviceInfo = NULL;
+
 
 UINT M27Q_Init()
 {
@@ -51,12 +51,7 @@ UINT M27Q_DeInit()
 PUINT M27Q_UsbWrite(UCHAR request, USHORT value, USHORT index, USHORT length, PUCHAR buffer)
 {
     PUINT transferred{0};
-    WINUSB_SETUP_PACKET setupPacket;
-    setupPacket.RequestType = 0x40;
-    setupPacket.Request = request;
-    setupPacket.Value = value;
-    setupPacket.Index = index;
-    setupPacket.Length = length;
+    WINUSB_SETUP_PACKET setupPacket = { 0x40, request, value, index, length };
 
     Usb.ControlTransfer(usbHandle, setupPacket, buffer, length, transferred, NULL);
 
@@ -68,12 +63,7 @@ PUINT M27Q_UsbWrite(UCHAR request, USHORT value, USHORT index, USHORT length, PU
 PUINT M27Q_UsbRead(UCHAR request, USHORT value, USHORT index, USHORT length, PUCHAR buffer)
 {
     PUINT transferred{0};
-    WINUSB_SETUP_PACKET setupPacket;
-    setupPacket.RequestType = 0xC0;
-    setupPacket.Request = request;
-    setupPacket.Value = value;
-    setupPacket.Index = index;
-    setupPacket.Length = length;
+    WINUSB_SETUP_PACKET setupPacket = { 0xC0, request, value, index, length };
 
     Sleep(50);
 
@@ -84,11 +74,13 @@ PUINT M27Q_UsbRead(UCHAR request, USHORT value, USHORT index, USHORT length, PUC
 
 UCHAR M27Q_GetOSD(PUCHAR data, USHORT length)
 {
-    UCHAR buffer[64] = {
+    UCHAR buffer[64]
+    {
         0x6E,
         0x51,
         static_cast<UCHAR>(0x81 + length),
-        0x01 };
+        0x01
+    };
 
     for (UINT idx = 0; idx < length; idx++)
     {
@@ -103,11 +95,13 @@ UCHAR M27Q_GetOSD(PUCHAR data, USHORT length)
 
 void M27Q_SetOSD(PUCHAR data, USHORT length)
 {
-    UCHAR buffer[64]{
+    UCHAR buffer[64]
+    {
         0x6E,
         0x51,
         static_cast<UCHAR>(0x81 + length),
-        0x03 };
+        0x03
+    };
 
     for (UINT idx = 0; idx < length; idx++)
     {
