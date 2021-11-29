@@ -42,7 +42,9 @@ UINT M27Q_Init()
 UINT M27Q_DeInit()
 {
     if (usbHandle)
+    {
         Usb.Free(usbHandle);
+    }
     return 0;
 }
 
