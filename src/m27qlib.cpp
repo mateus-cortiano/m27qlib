@@ -13,38 +13,42 @@ static KUSB_DRIVER_API Usb;
 static KUSB_HANDLE usbHandle = NULL;
 static KLST_DEVINFO_HANDLE deviceInfo = NULL;
 
-
-UINT M27Q_Init()
+extern "C" BOOL WINAPI DllMain (
+    HINSTANCE const instance,
+    DWORD     const reason,  
+    LPVOID    const reserved)
 {
     KLST_HANDLE deviceList = NULL;
 
-    LstK_Init(&deviceList, KLST_FLAG_NONE);
-
-    if (!LstK_FindByVidPid(deviceList, VID, PID, &deviceInfo))
+    switch (reason)
     {
-        return GetLastError();
-    };
+    case DLL_PROCESS_ATTACH:
+        LstK_Init(&deviceList, KLST_FLAG_NONE);
+        if (!LstK_FindByVidPid(deviceList, VID, PID, &deviceInfo))
+            return FALSE;
 
-    LibK_LoadDriverAPI(&Usb, deviceInfo->DriverID);
+        LibK_LoadDriverAPI(&Usb, deviceInfo->DriverID);
 
-    if (!Usb.Init(&usbHandle, deviceInfo))
-    {
-        return GetLastError();
-    };
+        if (!Usb.Init(&usbHandle, deviceInfo))
+            return FALSE;
 
-    LstK_Free(deviceList);
-    Usb.Init(&usbHandle, deviceInfo);
+        LstK_Free(deviceList);
+        Usb.Init(&usbHandle, deviceInfo);
 
-    return 0;
-}
+        break;
 
-UINT M27Q_DeInit()
-{
-    if (usbHandle)
-    {
-        Usb.Free(usbHandle);
+    case DLL_PROCESS_DETACH:
+        if (usbHandle)
+            Usb.Free(usbHandle);
+
+        break;
+
+    case DLL_THREAD_ATTACH:
+    case DLL_THREAD_DETACH:
+        return FALSE;
     }
-    return 0;
+
+    return TRUE;  // Successful DLL_PROCESS_ATTACH.
 }
 
 PUINT M27Q_UsbWrite(UCHAR request, USHORT value, USHORT index, USHORT length, PUCHAR buffer)
@@ -63,8 +67,8 @@ PUINT M27Q_UsbRead(UCHAR request, USHORT value, USHORT index, USHORT length, PUC
     PUINT transferred { 0 };
     WINUSB_SETUP_PACKET setupPacket { 0xC0, request, value, index, length };
 
-    Sleep(50);
     Usb.ControlTransfer(usbHandle, setupPacket, buffer, length, transferred, NULL);
+    Sleep(Delay);
 
     return transferred;
 }
@@ -85,6 +89,7 @@ UCHAR M27Q_GetOSD(PUCHAR data, USHORT length)
     }
 
     M27Q_UsbWrite(178, 0, 0, length + 4, buffer);
+    Sleep(50);
     M27Q_UsbRead(162, 0, 111, 12, buffer);
 
     return buffer[10];
