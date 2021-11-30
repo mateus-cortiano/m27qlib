@@ -28,19 +28,16 @@ extern "C" BOOL WINAPI DllMain (
             return FALSE;
 
         LibK_LoadDriverAPI(&Usb, deviceInfo->DriverID);
-
         if (!Usb.Init(&usbHandle, deviceInfo))
             return FALSE;
 
         LstK_Free(deviceList);
         Usb.Init(&usbHandle, deviceInfo);
-
         break;
 
     case DLL_PROCESS_DETACH:
         if (usbHandle)
             Usb.Free(usbHandle);
-
         break;
 
     case DLL_THREAD_ATTACH:
