@@ -33,7 +33,6 @@ UINT M27Q_Init()
     };
 
     LstK_Free(deviceList);
-    Usb.Init(&usbHandle, deviceInfo);
 
     return 0;
 }
