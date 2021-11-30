@@ -12,9 +12,9 @@
 #define PID 0x8883
 
 static UINT Delay { 50 };
-static KUSB_DRIVER_API Usb;
-static KUSB_HANDLE usbHandle = NULL;
-static KLST_DEVINFO_HANDLE deviceInfo = NULL;
+static KUSB_DRIVER_API Usb { NULL };
+static KUSB_HANDLE usbHandle { NULL };
+static KLST_DEVINFO_HANDLE deviceInfo { NULL };
 
 
 void M27Q_UsbWrite(UCHAR request, USHORT value, USHORT index, USHORT length, PUCHAR buffer)
