@@ -4,7 +4,6 @@
 */
 
 #pragma once
-#include <iostream>
 
 #ifdef M27QLIBRARY_EXPORTS
 #define M27QLIBRARY_API __declspec(dllexport)
