@@ -1,3 +1,8 @@
+/*
+    m27qlib.cpp
+    author: Mateus Cortiano Schwarz (mateus.cortiano@gmail.com)
+*/
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>

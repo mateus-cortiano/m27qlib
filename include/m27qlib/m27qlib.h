@@ -1,3 +1,8 @@
+/*
+    m27qlib.h
+    author: Mateus Cortiano Schwarz (mateus.cortiano@gmail.com)
+*/
+
 #pragma once
 #include <iostream>
 
