@@ -3,9 +3,6 @@
     author: Mateus Cortiano Schwarz (mateus.cortiano@gmail.com)
 */
 
-#include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <Windows.h>
 #include "libusbk/libusbk.h"
 #include "m27qlib/m27qlib.h"
