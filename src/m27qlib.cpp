@@ -16,8 +16,8 @@ static KLST_DEVINFO_HANDLE deviceInfo = NULL;
 extern "C" BOOL WINAPI DllMain (
     HINSTANCE const instance,
     DWORD     const reason,  
-    LPVOID    const reserved)
-{
+    LPVOID    const reserved
+) {
     KLST_HANDLE deviceList = NULL;
 
     switch (reason)
